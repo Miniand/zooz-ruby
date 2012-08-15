@@ -1,4 +1,3 @@
-# Require all files
-Dir[File.dirname(__FILE__) + '/**/*.rb'].each do |f|
-  require File.expand_path(f.gsub(/\.rb$/i, ''))
-end
+# Require all requests
+require 'zooz/request/open'
+require 'zooz/request/verify'

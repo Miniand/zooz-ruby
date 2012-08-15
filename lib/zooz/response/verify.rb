@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../response'
+require 'zooz/response'
 require 'active_support/core_ext/module/delegation'
 
 module Zooz
