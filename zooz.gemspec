@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.email       = 'beefsack@gmail.com'
   s.files       = ["lib/zooz.rb"]
   s.homepage    = 'https://github.com/Miniand/zooz-ruby'
-  s.add_dependency('activesupport', '~> 3.2.8')
-  s.add_dependency('httparty', '~> 0.8.3')
+  s.add_dependency('activesupport', '~> 3.2.0')
+  s.add_dependency('httparty', '~> 0.8.0')
 end
