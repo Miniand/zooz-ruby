@@ -39,7 +39,7 @@ module Zooz
     # Whether the request was successful, populates the @errors array on error.
     def success?
       @errors = []
-      unless http_code.to_s[0] == '2'
+      unless http_code.to_s[0,1] == '2'
         @errors << "HTTP status #{http_code}: #{http_message}"
       end
       unless status_code
