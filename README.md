@@ -21,7 +21,7 @@ require 'zooz'
 req = Zooz::Request::Open.new
 
 # Run in sandbox mode
-req.sandox = true
+req.sandbox = true
 
 # Enter your details
 req.unique_id = 'your-unique-id-here'
