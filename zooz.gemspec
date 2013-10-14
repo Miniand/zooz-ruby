@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'zooz'
-  s.version     = '1.0.2'
+  s.version     = '1.0.3'
   s.date        = '2012-08-23'
   s.summary     = "ZooZ"
   s.description = "A ZooZ API library for Ruby"
@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/Miniand/zooz-ruby'
   s.add_dependency('activesupport', '~> 4.0.0')
   s.add_dependency('httparty', '~> 0.8.0')
+  s.add_dependency('json')
 end

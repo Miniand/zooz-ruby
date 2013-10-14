@@ -5,7 +5,7 @@ require 'cgi'
 # and reports on success and errors.
 module Zooz
   class Response
-    attr_accessor :http_response, :request
+    attr_accessor :http_response, :request, :json_response
     attr_reader :errors
     delegate :body, :code, :message, :headers, :to => :http_response,
       :prefix => :http
@@ -26,9 +26,14 @@ module Zooz
       CGI::parse(http_body.strip)
     end
 
+    def parsed_json_response
+      @json_response = JSON.parse(http_body)
+    end
+
     # Get the ZooZ status code, 0 for success.
     def status_code
-      get_parsed_singular('statusCode')
+      get_parsed_singular('statusCode') if @json_response.blank?
+      @json_response['ResponseStatus'] unless @json_response.blank?
     end
 
     # Get the ZooZ error message, returned when status_code is not 0.

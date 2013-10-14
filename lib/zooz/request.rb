@@ -3,7 +3,7 @@ require 'httparty'
 # The ZooZ Request class formats and sends requests to the ZooZ API.
 module Zooz
   class Request
-    attr_accessor :sandbox, :unique_id, :app_key, :response_type, :cmd
+    attr_accessor :sandbox, :developer_id, :unique_id, :app_key, :response_type, :cmd
     attr_reader :errors, :params
 
     def initialize
@@ -44,7 +44,16 @@ module Zooz
           'ZooZ-Unique-ID' => @unique_id,
           'ZooZ-App-Key' => @app_key,
           'ZooZ-Response-Type' => @response_type,
-        })
+        }) if @response_type.eql?('NVP')
+
+      http_response = HTTParty.post(url, :format => :plain,
+                                    :headers => {
+                                        'ZooZDeveloperId' => @developer_id,
+                                        'ZooZServerAPIKey' => @app_key,
+                                        'cmd' => @cmd,
+                                        'ver' => @ver,
+                                        'transactionID' => @transaction_id
+                                    }) if @response_type.eql?('JSON')
       response = Response.new
       response.request = self
       response.http_response = http_response
@@ -58,7 +67,8 @@ module Zooz
     # Whether the request object is valid for requesting.
     def valid?
       @errors = []
-      @errors << 'unique_id is required' if @unique_id.nil?
+      @errors << 'unique_id is required' if @unique_id.nil? && @response_type.eql?('NVP')
+      @errors << 'developer_id is required' if @developer_id.nil? && @response_type.eql?('JSON')
       @errors << 'app_key is required' if @app_key.nil?
       @errors << 'cmd is required' if @cmd.nil?
       @errors << 'response_type is required' if @response_type.nil?
