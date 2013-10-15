@@ -32,8 +32,11 @@ module Zooz
 
     # Get the ZooZ status code, 0 for success.
     def status_code
-      get_parsed_singular('statusCode') if @json_response.blank?
-      @json_response['ResponseStatus'] unless @json_response.blank?
+      if @json_response.blank?
+        get_parsed_singular('statusCode')
+      else
+        @json_response['ResponseStatus']
+      end
     end
 
     # Get the ZooZ error message, returned when status_code is not 0.
