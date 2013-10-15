@@ -11,6 +11,7 @@ module Zooz
       @errors = []
       @response_type = 'NVP'
       @sandbox = false
+      @headers = {}
     end
 
     # Set a request parameter.
@@ -23,6 +24,10 @@ module Zooz
       @params[name]
     end
 
+    def set_header name, value
+      @headers[name]= value
+    end
+
     # Whether the request will be sent to sandbox.
     def is_sandbox?
       @sandbox == true
@@ -31,29 +36,34 @@ module Zooz
     # Get the URL of the API, based on whether in sandbox mode or not.
     def url
       (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
-        '/mobile/SecuredWebServlet'
+          '/mobile/SecuredWebServlet' if @response_type.eql?('NVP')
+      (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
+          '/mobile/ExtendedServerAPI' if @response_type.eql?('JSON')
     end
 
     # Send a request to the server, returns a Zooz::Response object or false.
     # If returning false, the @errors attribute is populated.
     def request
+      url1 = url
       return false unless valid?
       http_response = HTTParty.post(url, :format => :plain,
-        :query => @params.merge({ :cmd => @cmd }),
-        :headers => {
-          'ZooZ-Unique-ID' => @unique_id,
-          'ZooZ-App-Key' => @app_key,
-          'ZooZ-Response-Type' => @response_type,
-        }) if @response_type.eql?('NVP')
-
-      http_response = HTTParty.post(url, :format => :plain,
+                                    :query => @params.merge({ :cmd => @cmd }),
                                     :headers => {
-                                        'ZooZDeveloperId' => @developer_id,
-                                        'ZooZServerAPIKey' => @app_key,
-                                        'cmd' => @cmd,
-                                        'ver' => @ver,
-                                        'transactionID' => @transaction_id
-                                    }) if @response_type.eql?('JSON')
+                                        'ZooZ-Unique-ID' => @unique_id,
+                                        'ZooZ-App-Key' => @app_key,
+                                        'ZooZ-Response-Type' => @response_type,
+                                    }) if @response_type.eql?('NVP')
+
+      if @response_type.eql?('JSON')
+        headers = {
+            'ZooZDeveloperId' => @developer_id,
+            'ZooZServerAPIKey' => @app_key,
+            'cmd' => @cmd,
+        }
+
+        http_response = HTTParty.post(url, :format => :plain,
+                                      :headers => headers.merge(@headers))
+      end
       response = Response.new
       response.request = self
       response.http_response = http_response

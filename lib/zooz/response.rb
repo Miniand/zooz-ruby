@@ -23,7 +23,7 @@ module Zooz
 
     # Get a parsed response as an object from the response text.
     def parsed_response
-      CGI::parse(http_body.strip)
+      CGI::parse(http_body.strip) unless http_body.nil?
     end
 
     def parsed_json_response

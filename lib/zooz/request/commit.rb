@@ -1,5 +1,5 @@
 require 'zooz/request'
-require 'zooz/response/open'
+require 'zooz/response/commit'
 require 'active_support/core_ext/module/delegation'
 
 module Zooz
@@ -8,8 +8,8 @@ module Zooz
       attr_accessor :transaction_id, :requestor
       attr_reader :errors
       delegate :sandbox, :sandbox=, :unique_id, :unique_id=, :app_key,
-        :app_key=, :response_type, :response_type=, :cmd, :cmd=, :is_sandbox?,
-        :to => :requestor
+               :app_key=, :response_type, :response_type=, :cmd, :cmd=, :is_sandbox?, :developer_id, :developer_id=,
+               :to => :requestor
 
       def initialize
         @errors = []
@@ -19,9 +19,9 @@ module Zooz
 
       def request
         return false unless valid?
-        @requestor.set_param('ver', '1.0.6')
-        @requestor.set_param('transactionID', @transaction_id)
-        open_response = Response::Open.new
+        @requestor.set_header('ver', '1.0.6')
+        @requestor.set_header('transactionID', @transaction_id)
+        open_response = Response::Commit.new
         open_response.request = self
         open_response.response = @requestor.request
         unless open_response.response
