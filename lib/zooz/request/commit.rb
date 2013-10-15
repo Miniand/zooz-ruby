@@ -19,8 +19,8 @@ module Zooz
 
       def request
         return false unless valid?
-        @requestor.set_header('ver', '1.0.6')
-        @requestor.set_header('transactionID', @transaction_id)
+        @requestor.set_param('ver', '1.0.6')
+        @requestor.set_param('transactionID', @transaction_id)
         open_response = Response::Commit.new
         open_response.request = self
         open_response.response = @requestor.request
