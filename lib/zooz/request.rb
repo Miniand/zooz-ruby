@@ -54,13 +54,13 @@ module Zooz
                                         'ZooZ-Response-Type' => @response_type,
                                     }) if @response_type.eql?('NVP')
 
-      
 
-      http_response = HTTParty.post(url, :format => :plain,
-                                      :query => @params.merge({ :cmd => @cmd }),
-                                      :headers => {
+
+      http_response = HTTParty.post(url, :format => :json,
+                                    :body => @params.merge({ :cmd => @cmd }),
+                                    :headers => {
                                         'ZooZDeveloperId' => @developer_id,
-                                        'ZooZServerAPIKey' => @app_key
+                                        'ZooZServerAPIKey' => CGI::escape(@app_key)
                                     }) if @response_type.eql?('JSON')
 
       response = Response.new

@@ -8,7 +8,7 @@ module Zooz
     attr_accessor :http_response, :request, :json_response
     attr_reader :errors
     delegate :body, :code, :message, :headers, :to => :http_response,
-      :prefix => :http
+             :prefix => :http
     delegate :is_sandbox?, :unique_id, :app_key, :to => :request
 
     def initialize
@@ -27,7 +27,11 @@ module Zooz
     end
 
     def parsed_json_response
-      @json_response = JSON.parse(http_body)
+      begin
+        @json_response = JSON.parse(http_body)
+      rescue UnparserError
+        @json_response = nil
+      end
     end
 
     # Get the ZooZ status code, 0 for success.
@@ -35,7 +39,7 @@ module Zooz
       if @json_response.blank?
         get_parsed_singular('statusCode')
       else
-        @json_response['ResponseStatus']
+        @json_response['ResponseStatus'].to_s
       end
     end
 
@@ -46,6 +50,7 @@ module Zooz
 
     # Whether the request was successful, populates the @errors array on error.
     def success?
+      parsed_json_response
       @errors = []
       unless http_code.to_s[0,1] == '2'
         @errors << "HTTP status #{http_code}: #{http_message}"
