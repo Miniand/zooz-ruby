@@ -35,10 +35,13 @@ module Zooz
 
     # Get the URL of the API, based on whether in sandbox mode or not.
     def url
-      (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
-          '/mobile/SecuredWebServlet' if @response_type.eql?('NVP')
-      (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
-          '/mobile/ExtendedServerAPI' if @response_type.eql?('JSON')
+      if @response_type.eql?('NVP')
+        (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
+          '/mobile/SecuredWebServlet'
+      else
+       (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
+          '/mobile/ExtendedServerAPI'
+      end
     end
 
     # Send a request to the server, returns a Zooz::Response object or false.
