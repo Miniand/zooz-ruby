@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'zooz'
-  s.version     = '1.0.5'
+  s.version     = '1.0.6'
   s.date        = '2012-08-23'
   s.summary     = "ZooZ"
   s.description = "A ZooZ API library for Ruby"
