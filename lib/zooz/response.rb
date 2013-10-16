@@ -29,7 +29,7 @@ module Zooz
     def parsed_json_response
       begin
         @json_response = JSON.parse(http_body)
-      rescue UnparserError
+      rescue JSON::UnparserError
         @json_response = nil
       end
     end
