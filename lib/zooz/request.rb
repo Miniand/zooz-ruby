@@ -12,6 +12,7 @@ module Zooz
       @response_type = 'NVP'
       @sandbox = false
       @headers = {}
+      @url = ''
     end
 
     # Set a request parameter.
@@ -36,12 +37,13 @@ module Zooz
     # Get the URL of the API, based on whether in sandbox mode or not.
     def url
       if @response_type.eql?('NVP')
-        (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
+        @url = (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
           '/mobile/SecuredWebServlet'
       else
-       (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
+        @url = (is_sandbox? ? 'https://sandbox.zooz.co' : 'https://app.zooz.com') +
           '/mobile/ExtendedServerAPI'
       end
+      @url
     end
 
     # Send a request to the server, returns a Zooz::Response object or false.
