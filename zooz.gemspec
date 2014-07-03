@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name        = 'zooz'
-  s.version     = '1.0.10'
+  s.version     = '1.0.11'
   s.date        = '2013-10-16'
   s.summary     = "ZooZ"
   s.description = "A ZooZ API library for Ruby"
-  s.authors     = ["Michael Alexander", "Francisco Soto"]
+  s.authors     = ["Michael Alexander", "Francisco Soto", "Lostmyname"]
   s.email       = 'beefsack@gmail.com'
   s.files       = Dir["{lib}/**/*.rb", "bin/*", "LICENSE", "*.md"]
   s.require_path = 'lib'
