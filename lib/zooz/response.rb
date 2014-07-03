@@ -5,10 +5,10 @@ require 'cgi'
 # and reports on success and errors.
 module Zooz
   class Response
-    attr_accessor :http_response, :request
+    attr_accessor :http_response, :request, :json_response
     attr_reader :errors
     delegate :body, :code, :message, :headers, :to => :http_response,
-      :prefix => :http
+             :prefix => :http
     delegate :is_sandbox?, :unique_id, :app_key, :to => :request
 
     def initialize
@@ -23,12 +23,24 @@ module Zooz
 
     # Get a parsed response as an object from the response text.
     def parsed_response
-      CGI::parse(http_body.strip)
+      CGI::parse(http_body.strip) unless http_body.nil?
+    end
+
+    def parsed_json_response
+      begin
+        @json_response = JSON.parse(http_body)
+      rescue
+        @json_response = nil
+      end
     end
 
     # Get the ZooZ status code, 0 for success.
     def status_code
-      get_parsed_singular('statusCode')
+      if @json_response.blank?
+        get_parsed_singular('statusCode')
+      else
+        @json_response['ResponseStatus'].to_s
+      end
     end
 
     # Get the ZooZ error message, returned when status_code is not 0.
@@ -38,6 +50,7 @@ module Zooz
 
     # Whether the request was successful, populates the @errors array on error.
     def success?
+      parsed_json_response
       @errors = []
       unless http_code.to_s[0,1] == '2'
         @errors << "HTTP status #{http_code}: #{http_message}"
