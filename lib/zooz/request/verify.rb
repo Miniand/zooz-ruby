@@ -5,7 +5,7 @@ require 'active_support/core_ext/module/delegation'
 module Zooz
   class Request
     class Verify
-      attr_accessor :trx_id
+      attr_accessor :trx_id, :requestor
       attr_reader :errors
       delegate :sandbox, :sandbox=, :unique_id, :unique_id=, :app_key,
         :app_key=, :response_type, :response_type=, :cmd, :cmd=, :is_sandbox?,
